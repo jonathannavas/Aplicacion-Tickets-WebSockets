@@ -1,3 +1,35 @@
+//Referencias HTML
+
+const lblNuevoTicket = document.querySelector('#lblNuevoTicket');
+const btnCrear = document.querySelector('button');
+
+const socket = io();
+
+socket.on('connect', () => {
+    
+    btnCrear.disabled = false;
+
+});
+
+socket.on('disconnect', () => {
+
+    btnCrear.disabled = true;
+
+});
 
 
-console.log('Nuevo Ticket HTML');
+btnCrear.addEventListener( 'click', () => {
+
+    socket.emit( 'siguiente-ticket', null, ( ticket ) => {
+        lblNuevoTicket.innerText = ticket;
+    });
+
+});
+
+window.onload = () => {
+    
+    socket.on('ultimo-ticket', (ultimoTicket)=>{
+        lblNuevoTicket.innerText = 'Ticket ' + ultimoTicket;
+    });
+    
+}
